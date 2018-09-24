@@ -1,22 +1,26 @@
 language: groovy
 jdk:
-  - oraclejdk8
+- oraclejdk8
 sudo: false
-branches:
-  only:
-  - master
-  - grails3
 before_cache:
-  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
-  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
 cache:
   directories:
-  - $HOME/.m2
-  - $HOME/.gradle/caches/
-  - $HOME/.gradle/wrapper/
-after_success:
-  - '[ "${TRAVIS_PULL_REQUEST}" = "false" ] && travis_retry ./gradlew publish'
-env:
-  global:
-  - secure: GlvvIeoenszVNoFR5Or8MY6qp0M6HOr5injRgXzDuoevvfSGfqA+LtF1WLAzDqWpKMPP7doqJMCPhYJhOQS6Is0AhmJ9EEsLaIdkSZtxIRah8F2SlMfJcRENxLq12gSOZtwH0KipZ8qE6dhcB5026ZpOUPBEIscaG56Kv8hga0A=
-  - secure: N57B+YOXMJY6QzC7ASuH1LwFmTAquAQYuDIoeslXUhPMEbbK9ZQfZQ6wveY0wmnwwtKyZR4tLzkNXXEOnDhwV+1qzzLI9SuofJukSjwmGr2uBcAIrTMzykgzjEzOlZpzZ+QgEYm/KydNctn9ezOHiGAQbmYbejMFw/dYunEQ9/U=
+  - "$HOME/.m2"
+  - "$HOME/.gradle/caches/"
+  - "$HOME/.gradle/wrapper/"
+script:
+- "./gradlew clean war"
+deploy:
+  provider: releases
+  api_key:
+    secure: Hy0hubIJkT3I9GBRl9YtmQM3VIE2lDOFzvlwXjlrpzE9sxFMlA/B9uUIZ0YMF319BdS46OnwSE5RBQQ6RtMkAkM00tnTAiMoTGhDi1g2GDbYEnMOSQqoHoYOwqfDEX6Z5FeEJIaYBbOEPrcGfivxa9FRcz6w42cAnkg/FCfa/4zu0wbm3XxzIXZA8nnXm9lb6+h/f8P73hPQ1ux3oh5Tr5DxNs3+jtg5fJQSu+D1lhaDma0FmrZkBvNzUNUzhE6zQpyKfUrzFr5FHPOiRKHQUVgKsLxNpAdP0GXiGOJaCvhLiVSOmuyuDwhhIHxqq7rtH41UAkptwB+T6LSmky2pGPmo40QR9lfrNggzao4bwrnIPASTNoGg+JHT9Tf3XcBf8NOqbTUeMX0XHo/W7jMjJcHa63BuPgeZm+L4gnf2OLjupiudwotLr0y65pm7pkPtcu7XJ8PXRDd02zq3Axh9eGPYbj+k6v0Ehdya05fWTJVImDdw1+qlqTbIHMNq0yQ5/yeLUMo9EigLVQjSx4KRj69h8FkYZ/MzCvgi/kAA4QZQWLzgVkx602WAtpRiRZSZPIx6fcyRgYojIk4Yl3Bi75xQaOJVuViuJ3Yh4nXEnXHTJqj3KFWv/RiFfwVT9y5LESEWBdx/NwnTYnIV9tIiV8n5jjVQeoZ7v9oIfRs/U1s=
+  file_glob: true
+  file: build/libs/apikey-*.war
+  skip_cleanup: true
+  overwrite: true
+  on:
+    repo: bioatlas/apikey
+    all-branches: true
+    tags: true
